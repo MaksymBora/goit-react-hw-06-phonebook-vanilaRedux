@@ -5,20 +5,21 @@ import { ContactList } from '../ContactsList/ContactsList';
 import { AppWrapper, Title, SearchWrapper, StyledTitles, CloseBtn, OpenPhonebook } from './app.styled';
 import { useDispatch, useSelector } from "react-redux";
 import { removeContact } from "redux/contactsSlice";
+import { contactsFilter } from "redux/filterSlice";
+
 
 
 
 export const App = () => {
-  const [filter, setFilter] = useState('');
   const [isOpen, setIsOpen] = useState(false);
+
   const value = useSelector(state => state.contacts);
+  const nameFromFilter = useSelector(state => state.filter);
+
   const dispatch = useDispatch();
 
 
-  const getContact = evt => {
-    const searchQuerry = evt.currentTarget.value;
-    setFilter(searchQuerry)
-  }
+
   
 
 
@@ -30,6 +31,10 @@ export const App = () => {
       setIsOpen(false)
   };
 
+
+
+
+  const filteredContacts = value.filter(({ name }) => name.toLowerCase().includes(nameFromFilter.toLocaleLowerCase()));
 
   
     return (
@@ -45,8 +50,8 @@ export const App = () => {
                 <Title>Contacts</Title>
                 <p>Find contacts by name</p>
               </StyledTitles>
-              <Filter filter={ filter } getContact={getContact}  />
-              <ContactList filteredContacts={value} removeContact={ (contactId) => dispatch(removeContact(contactId))} />
+              <Filter filter={ nameFromFilter } getContact={(e) => dispatch(contactsFilter(e.currentTarget.value))}  />
+              <ContactList filteredContacts={filteredContacts} removeContact={ (contactId) => dispatch(removeContact(contactId))} />
             </SearchWrapper>
         </AppWrapper>
         }
