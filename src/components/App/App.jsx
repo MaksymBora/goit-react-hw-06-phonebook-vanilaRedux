@@ -1,61 +1,26 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { ContactsForm } from '../ContactsForm/ContactsForm';
 import { Filter } from '../Filter/Filter';
 import { ContactList } from '../ContactsList/ContactsList';
 import { AppWrapper, Title, SearchWrapper, StyledTitles, CloseBtn, OpenPhonebook } from './app.styled';
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { removeContact } from "redux/contactsSlice";
 
 
-const localStorageKey = 'contacts'
 
 export const App = () => {
-  const [contacts, setContacts] = useState(() => {
-    const savedContacts = localStorage.getItem(localStorageKey);
-    if (savedContacts !== null) {
-      return JSON.parse(savedContacts);
-    }
-    return [];
-  });
   const [filter, setFilter] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-
-
-
-
-
   const value = useSelector(state => state.contacts);
-
-
-
-
-
-
-  useEffect(( ) => {
-      localStorage.setItem(localStorageKey, JSON.stringify(contacts));
-  }, [contacts]);
-  
-
-    const addContact = (newContact) => {
-    if (contacts.find(contact => contact.name === newContact.name)) {
-      return alert(`${newContact.name} is already in contacts`);
-    }
-      
-    if (contacts.find(contact => contact.number === newContact.number)) {
-      return alert(`${newContact.number} is already in contacts`);
-    }
-      setContacts(prevState => [...prevState, newContact]);
-  };
+  const dispatch = useDispatch();
 
 
   const getContact = evt => {
     const searchQuerry = evt.currentTarget.value;
     setFilter(searchQuerry)
-    
   }
   
-  const removeContact = contactId => {
-    setContacts(prevState => prevState.filter(contact => contact.id !== contactId));
-  };
+
 
   const showPhonebook = () => {
     setIsOpen(true)
@@ -65,7 +30,7 @@ export const App = () => {
       setIsOpen(false)
   };
 
-  // const filteredContacts = contacts.filter(({ name }) => name.toLowerCase().includes(filter.toLocaleLowerCase()));
+
   
     return (
       <>
@@ -73,7 +38,7 @@ export const App = () => {
         {isOpen &&
           <AppWrapper>
             <CloseBtn onClick={hidePhonebook}/>
-            <ContactsForm onAdd={ addContact } />
+            <ContactsForm />
 
             <SearchWrapper>
               <StyledTitles>
@@ -81,7 +46,7 @@ export const App = () => {
                 <p>Find contacts by name</p>
               </StyledTitles>
               <Filter filter={ filter } getContact={getContact}  />
-              <ContactList filteredContacts={value} removeContact={ removeContact} />
+              <ContactList filteredContacts={value} removeContact={ (contactId) => dispatch(removeContact(contactId))} />
             </SearchWrapper>
         </AppWrapper>
         }

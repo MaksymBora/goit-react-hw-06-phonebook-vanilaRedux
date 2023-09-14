@@ -2,7 +2,6 @@ import { Formik } from 'formik';
 import { nanoid } from 'nanoid';
 import { FiUserPlus } from 'react-icons/fi';
 import * as Yup from 'yup';
-import PropTypes from 'prop-types';
 import {
   StyledForm,
   StyledField,
@@ -11,9 +10,8 @@ import {
   Wrapper,
   Button,
 } from './ContactsForm.styled';
-import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addNewContact } from 'redux/contactsReducer';
+import { addNewContact } from 'redux/contactsSlice';
 
 function validatePhone(phone) {
   let regex = /^(?:\+380\d{9}|0\d{9})$/;
@@ -33,13 +31,12 @@ const ContactsSchema = Yup.object().shape({
 
 const initialValues = { name: '', number: '' };
 
-export const ContactsForm = ({}) => {
-  // const [contact, setContact] = useState({});
+export const ContactsForm = () => {
   const dispatch = useDispatch();
 
   const handleSubmit = (values, { resetForm }) => {
     dispatch(addNewContact({ ...values, id: nanoid() }));
-    // onAdd({ ...values, id: nanoid() });
+
     resetForm();
   };
 
@@ -70,8 +67,4 @@ export const ContactsForm = ({}) => {
       </Formik>
     </Wrapper>
   );
-};
-
-ContactsForm.propTypes = {
-  onAdd: PropTypes.func.isRequired,
 };
