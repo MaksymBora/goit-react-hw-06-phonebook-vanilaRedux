@@ -11,6 +11,9 @@ import {
   Wrapper,
   Button,
 } from './ContactsForm.styled';
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { addNewContact } from 'redux/contactsReducer';
 
 function validatePhone(phone) {
   let regex = /^(?:\+380\d{9}|0\d{9})$/;
@@ -30,9 +33,13 @@ const ContactsSchema = Yup.object().shape({
 
 const initialValues = { name: '', number: '' };
 
-export const ContactsForm = ({ onAdd }) => {
+export const ContactsForm = ({}) => {
+  // const [contact, setContact] = useState({});
+  const dispatch = useDispatch();
+
   const handleSubmit = (values, { resetForm }) => {
-    onAdd({ ...values, id: nanoid() });
+    dispatch(addNewContact({ ...values, id: nanoid() }));
+    // onAdd({ ...values, id: nanoid() });
     resetForm();
   };
 

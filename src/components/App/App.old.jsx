@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import { ContactsForm } from '../ContactsForm/ContactsForm';
 import { Filter } from '../Filter/Filter';
 import { ContactList } from '../ContactsList/ContactsList';
-import { AppWrapper, Title, SearchWrapper, StyledTitles, CloseBtn, OpenPhonebook } from './app.styled';
-import { useSelector } from "react-redux";
+import { AppWrapper,Title, SearchWrapper, StyledTitles, CloseBtn, OpenPhonebook } from './app.styled';
 
 
 const localStorageKey = 'contacts'
@@ -18,15 +17,6 @@ export const App = () => {
   });
   const [filter, setFilter] = useState('');
   const [isOpen, setIsOpen] = useState(false);
-
-
-
-
-
-  const value = useSelector(state => state.contacts);
-
-
-
 
 
 
@@ -65,7 +55,7 @@ export const App = () => {
       setIsOpen(false)
   };
 
-  // const filteredContacts = contacts.filter(({ name }) => name.toLowerCase().includes(filter.toLocaleLowerCase()));
+  const filteredContacts = contacts.filter(({ name }) => name.toLowerCase().includes(filter.toLocaleLowerCase()));
   
     return (
       <>
@@ -81,7 +71,7 @@ export const App = () => {
                 <p>Find contacts by name</p>
               </StyledTitles>
               <Filter filter={ filter } getContact={getContact}  />
-              <ContactList filteredContacts={value} removeContact={ removeContact} />
+              <ContactList filteredContacts={filteredContacts} removeContact={ removeContact} />
             </SearchWrapper>
         </AppWrapper>
         }
